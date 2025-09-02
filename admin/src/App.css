@@ -153,6 +153,18 @@ body {
   overflow-y: auto;
 }
 
+/* Delete confirmation modal */
+.modal-content h2 {
+  margin: 0 0 15px 0;
+  color: #333;
+}
+
+.modal-content p {
+  margin: 0 0 20px 0;
+  color: #666;
+  line-height: 1.5;
+}
+
 .loading {
   text-align: center;
   padding: 40px;

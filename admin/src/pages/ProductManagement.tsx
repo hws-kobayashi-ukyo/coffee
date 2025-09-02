@@ -6,7 +6,9 @@ const ProductManagement: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [deleteProductId, setDeleteProductId] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -66,15 +68,28 @@ const ProductManagement: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('この商品を削除しますか？')) return;
+    setDeleteProductId(id);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteProductId) return;
     
     try {
-      await productService.delete(id);
+      await productService.delete(deleteProductId);
       alert('商品を削除しました');
       fetchProducts();
     } catch (error) {
       alert('商品の削除に失敗しました');
+    } finally {
+      setShowDeleteModal(false);
+      setDeleteProductId(null);
     }
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setDeleteProductId(null);
   };
 
   const resetForm = () => {
@@ -228,6 +243,24 @@ const ProductManagement: React.FC = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {showDeleteModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>削除確認</h2>
+            <p>この商品を削除しますか？削除すると元に戻せません。</p>
+            
+            <div className="modal-actions">
+              <button type="button" onClick={cancelDelete} className="btn btn-secondary">
+                キャンセル
+              </button>
+              <button type="button" onClick={confirmDelete} className="btn btn-danger">
+                削除
+              </button>
+            </div>
           </div>
         </div>
       )}
